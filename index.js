@@ -32,6 +32,7 @@ async function run(){
     try{
         await client.connect();
         const productCollection = client.db('monota-autoParts').collection('product');
+        const orderCollection = client.db('monota-autoParts').collection('orders');
 
         app.get('/product', async(req,res)=>{
             const query = {};
@@ -72,6 +73,20 @@ async function run(){
         res.send(product);
     });
 
+    // order submit api
+    app.post('/order', async(req,res)=>{
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
+    });
+
+    // order load on My Order
+    app.get('/order', async(req,res)=>{
+      const orderUser = req.query.orderUser;
+      const query = {orderUser : orderUser};
+      const orders = await orderCollection.find(query).toArray();
+      res.send(orders);
+    })
     }
     finally{
 
