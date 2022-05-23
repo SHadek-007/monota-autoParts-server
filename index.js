@@ -59,6 +59,19 @@ async function run(){
           });
           res.send(product);
         });
+
+        // count decrease api
+      app.put("/product/decrease/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const product = await productCollection.findOne(query);
+        const newQuantity = parseInt(product.mquantity) - 1;
+        await productCollection.updateOne(query, {
+          $set: { mquantity: newQuantity + "" },
+        });
+        res.send(product);
+    });
+
     }
     finally{
 
