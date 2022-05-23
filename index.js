@@ -47,7 +47,18 @@ async function run(){
           const product = await productCollection.findOne(query);
           res.send(product);
         });
-        
+        // count increase api
+        app.put("/product/increase/:id", async (req, res) => {
+          const id = req.params.id;
+          const query = { _id: ObjectId(id) };
+          const product = await productCollection.findOne(query);
+          const newQuantity =
+            parseInt(product.mquantity) + parseInt(req.body.mquantity);
+          await productCollection.updateOne(query, {
+            $set: { mquantity: newQuantity + "" },
+          });
+          res.send(product);
+        });
     }
     finally{
 
