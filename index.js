@@ -36,6 +36,7 @@ async function run(){
         const productCollection = client.db('monota-autoParts').collection('product');
         const orderCollection = client.db('monota-autoParts').collection('orders');
         const paymentCollection = client.db('monota-autoParts').collection('payments');
+        const reviewCollection = client.db("monota-autoParts").collection("reviews");
 
         app.get('/product', async(req,res)=>{
             const query = {};
@@ -127,6 +128,21 @@ async function run(){
       const updatedOrder = await orderCollection.updateOne(filter,updateDoc);
       res.send(updateDoc)
     });
+
+    // delete order verifyadmin
+    app.delete('/order/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = {email:email}
+      const result = await orderCollection.deleteOne(filter);
+      res.send(result);
+    });
+
+    // submit review api
+    app.post('/review', async(req,res)=>{
+      const item = req.body;
+      const result = await reviewCollection.insertOne(item);
+      res.send({...item,_id:result.insertedId});
+  });
 
     }
     finally{
