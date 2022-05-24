@@ -86,7 +86,16 @@ async function run(){
       const query = {orderUser : orderUser};
       const orders = await orderCollection.find(query).toArray();
       res.send(orders);
-    })
+    });
+
+    // order api for pay jwt
+    app.get('/order/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const order = await orderCollection.findOne(query);
+      res.send(order);
+    });
+    
     }
     finally{
 
