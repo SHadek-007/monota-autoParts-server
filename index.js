@@ -5,6 +5,8 @@ require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 
 // middleware 
 app.use(cors());
@@ -33,6 +35,7 @@ async function run(){
         await client.connect();
         const productCollection = client.db('monota-autoParts').collection('product');
         const orderCollection = client.db('monota-autoParts').collection('orders');
+        const paymentCollection = client.db('monota-autoParts').collection('payments');
 
         app.get('/product', async(req,res)=>{
             const query = {};
@@ -108,7 +111,23 @@ async function run(){
       });
       res.send({clientSecret: paymentIntent.client_secret})
     });
-    
+
+    //payment update api, verifyJWT
+    app.patch('/order/:id', async(req,res)=>{
+      const id = req.params.id;
+      const payment = req.body;
+      const filter = {_id: ObjectId(id)};
+      const updateDoc = {
+        $set:{
+          paid:true,
+          transactionId:payment.transactionId,
+        }
+      }
+      const result = await paymentCollection.insertOne(payment);
+      const updatedOrder = await orderCollection.updateOne(filter,updateDoc);
+      res.send(updateDoc)
+    });
+
     }
     finally{
 
