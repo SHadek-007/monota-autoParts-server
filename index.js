@@ -95,6 +95,19 @@ async function run(){
       const order = await orderCollection.findOne(query);
       res.send(order);
     });
+
+    //payment api , verifyJWT
+    app.post('/create-payment-intent', async(req, res) =>{
+      const product = req.body;
+      const price = product.price;
+      const amount = price*100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount : amount,
+        currency: 'usd',
+        payment_method_types:['card']
+      });
+      res.send({clientSecret: paymentIntent.client_secret})
+    });
     
     }
     finally{
