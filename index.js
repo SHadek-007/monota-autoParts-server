@@ -192,6 +192,18 @@ async function run(){
       const users = await userCollection.find().toArray();
       res.send(users);
     });
+
+    //admin create api in make admin component
+    app.put('/user/admin/:email', verifyJWT, verifyAdmin, async(req, res)=>{
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { role: 'admin' },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+    
     }
     finally{
 
