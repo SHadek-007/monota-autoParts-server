@@ -173,7 +173,7 @@ async function run(){
       res.send({admin:isAdmin});
     });
 
-    //dekhte hobe
+    //all user api
     app.put('/user/:email', async(req, res)=>{
       const email = req.params.email;
       const user = req.body;
@@ -185,6 +185,12 @@ async function run(){
       const result = await userCollection.updateOne(filter, updateDoc, options);
       var token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN, { expiresIn: '1d' });
       res.send({result, token});
+    });
+
+    //get all user in All User in Dashboard Component
+    app.get('/user', verifyJWT, async(req, res)=>{
+      const users = await userCollection.find().toArray();
+      res.send(users);
     });
     }
     finally{
