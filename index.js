@@ -104,6 +104,14 @@ async function run(){
       res.send(orders);
     });
 
+    //load all order on manage order page
+    app.get('/all-order', async(req,res)=>{
+      const query = {};
+      const cursor = orderCollection.find(query);
+      const orders = await cursor.toArray();
+      res.send(orders);
+  });
+
     // order api for pay jwt
     app.get('/order/:id', async(req, res)=>{
       const id = req.params.id;
@@ -142,10 +150,10 @@ async function run(){
     });
 
     // delete order verifyadmin
-    app.delete('/order/:email', async (req, res) => {
-      const email = req.params.email;
-      const filter = {email:email}
-      const result = await orderCollection.deleteOne(filter);
+    app.delete('/order/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
       res.send(result);
     });
 
