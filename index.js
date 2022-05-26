@@ -168,8 +168,7 @@ async function run(){
     // load review on review component
     app.get('/review', async(req,res)=>{
       const query = {};
-      const cursor = reviewCollection.find(query);
-      const reviews = await cursor.toArray();
+      const cursor = reviewCollection.find(query); const reviews = await cursor.toArray();
       res.send(reviews);
     });
 
@@ -242,6 +241,7 @@ async function run(){
       res.send(result)
 
   })
+  // console.log(object);
   // Get user Data
   app.get('/myfrofiledata/:email', async (req, res) => {
     const email = req.params.email
