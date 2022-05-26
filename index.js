@@ -113,7 +113,7 @@ async function run(){
   });
 
     // order api for pay jwt
-    app.get('/order/:id', async(req, res)=>{
+    app.get('/order/:id',verifyJWT, async(req, res)=>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
       const order = await orderCollection.findOne(query);
@@ -121,7 +121,7 @@ async function run(){
     });
 
     //payment api , verifyJWT
-    app.post('/create-payment-intent', async(req, res) =>{
+    app.post('/create-payment-intent', verifyJWT,async(req, res) =>{
       const product = req.body;
       const price = product.price;
       const amount = price*100;
@@ -134,7 +134,7 @@ async function run(){
     });
 
     //payment update api, verifyJWT
-    app.patch('/order/:id', async(req,res)=>{
+    app.patch('/order/:id', verifyJWT, async(req,res)=>{
       const id = req.params.id;
       const payment = req.body;
       const filter = {_id: ObjectId(id)};
@@ -150,7 +150,7 @@ async function run(){
     });
 
     // delete order verifyadmin
-    app.delete('/order/:id', async (req, res) => {
+    app.delete('/order/:id', verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await orderCollection.deleteOne(query);
