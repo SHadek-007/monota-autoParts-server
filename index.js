@@ -227,6 +227,29 @@ async function run(){
       const result = await productCollection.deleteOne(query);
       res.send(result);
     });
+
+    // Update User Info
+    app.put('/myprofile/:email', async (req, res) => {
+      const email = req.params.email
+      const updateUser = req.body
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDocument = {
+          $set: updateUser
+      };
+      const result = await userCollection.updateOne(filter, updateDocument, options)
+
+      res.send(result)
+
+  })
+  // Get user Data
+  app.get('/myfrofiledata/:email', async (req, res) => {
+    const email = req.params.email
+    const query = { email: email };
+    const cursor = userCollection.find(query);
+    const result = await cursor.toArray()
+    res.send(result)
+})
     }
     finally{
 
