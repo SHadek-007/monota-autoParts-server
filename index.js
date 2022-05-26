@@ -150,7 +150,7 @@ async function run(){
     });
 
     // delete order verifyadmin
-    app.delete('/order/:id', verifyAdmin, async (req, res) => {
+    app.delete('/order/:id',verifyJWT, verifyAdmin, async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await orderCollection.deleteOne(query);
